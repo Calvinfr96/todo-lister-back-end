@@ -106,12 +106,61 @@ class Application
       end
     end
 
+    #TASK ROUTES
+
+    #Index
+    if req.path == '/tasks' && req.get?
+      return [200, {'Content-Type' => 'application/json'}, [Task.all.to_json]]
+    end
+
+    #Create
+    if req.path == '/tasks' && req.post?
+      body = JSON.parse(req.body.read)
+      new_task = Task.create(body)
+      return [201, {'Content-Type' => 'application/json'}, [new_task.to_json]]
+    end
+
+    #Show
+    if req.path.match('/tasks/') && req.get?
+      id = req.path.split('/')[2]
+      task = Task.find_by_id(id)
+
+      if task
+        return [200, {'Content-Type' => 'application/json'}, [task.to_json]]
+      else
+        return [404, {'Content-Type' => 'application/json'}, [ {"message" => "Error 404: Content not found"}.to_json ]]
+      end
+    end
+
+    #Update
+    if req.path.match('/tasks/') && req.patch?
+      id = req.path.split('/')[2]
+      body = JSON.parse(req.body.read)
+      task = Task.find_by_id(id)
+
+      if task
+        task.update(body)
+        return [202, {'Content-Type' => 'application/json'}, [task.to_json]]
+      else
+        return [404, {'Content-Type' => 'application/json'}, [ {"message" => "Error 404: Content not found. Could not update record"}.to_json ]]
+      end
+    end
+
+    #Delete
+    if req.path.match('/tasks/') && req.delete?
+      id = req.path.split('/')[2]
+      task = Task.find_by_id(id)
+
+      if task
+        task.destroy
+        return [200, {'Content-Type' => 'application/json'}, [{"message" => "User destroyed."}.to_json]]
+      end
+    end
+
     if req.path.match(/test/) 
       return [200, { 'Content-Type' => 'application/json' }, [ {:message => "test response!"}.to_json ]]
-
     else
       res.write "Path Not Found"
-
     end
 
     res.finish
