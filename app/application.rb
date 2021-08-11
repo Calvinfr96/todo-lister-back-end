@@ -55,6 +55,57 @@ class Application
       end
     end
 
+    #CATEGORY ROUTES
+
+    #Index
+    if req.path == '/categories' && req.get?
+      return [200, {'Content-Type' => 'application/json'}, [Category.all.to_json]]
+    end
+
+    #Create
+    if req.path == '/categories' && req.post?
+      body = JSON.parse(req.body.read)
+      new_category = Category.create(body)
+      return [201, {'Content-Type' => 'application/json'}, [new_category.to_json]]
+    end
+
+    #Show
+    if req.path.match('/categories/') && req.get?
+      id = req.path.split('/')[2]
+      category = Category.find_by_id(id)
+
+      if category
+        return [200, {'Content-Type' => 'application/json'}, [category.to_json]]
+      else
+        return [404, {'Content-Type' => 'application/json'}, [ {"message" => "Error 404: Content not found"}.to_json ]]
+      end
+    end
+
+    #Update
+    if req.path.match('/categories/') && req.patch?
+      id = req.path.split('/')[2]
+      body = JSON.parse(req.body.read)
+      category = Category.find_by_id(id)
+
+      if category
+        category.update(body)
+        return [202, {'Content-Type' => 'application/json'}, [category.to_json]]
+      else
+        return [404, {'Content-Type' => 'application/json'}, [ {"message" => "Error 404: Content not found. Could not update record"}.to_json ]]
+      end
+    end
+
+    #Delete
+    if req.path.match('/categories/') && req.delete?
+      id = req.path.split('/')[2]
+      category = Category.find_by_id(id)
+
+      if category
+        category.destroy
+        return [200, {'Content-Type' => 'application/json'}, [{"message" => "User destroyed."}.to_json]]
+      end
+    end
+
     if req.path.match(/test/) 
       return [200, { 'Content-Type' => 'application/json' }, [ {:message => "test response!"}.to_json ]]
 
