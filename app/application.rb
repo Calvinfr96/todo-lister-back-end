@@ -8,7 +8,7 @@ class Application
 
     #Index
     if req.path == '/users' && req.get?
-      return [200, {'Content-Type' => 'application/json'}, [User.all.to_json]]
+      return [200, {'Content-Type' => 'application/json'}, [User.all.as_json(include: :categories).to_json]]
     end
 
     #Create
@@ -110,7 +110,7 @@ class Application
 
     #Index
     if req.path == '/tasks' && req.get?
-      return [200, {'Content-Type' => 'application/json'}, [Task.all.as_json(include: :category).to_json]]
+      return [200, {'Content-Type' => 'application/json'}, [Task.all.to_json]]
     end
 
     #Create
