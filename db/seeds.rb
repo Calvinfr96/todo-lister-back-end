@@ -31,7 +31,8 @@ categories = Category.all
         description: descriptions.sample,
         user: users.sample,
         category: categories.sample,
-        important: false
+        important: false,
+        completed: false
     )
 end
 
