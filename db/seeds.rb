@@ -30,7 +30,8 @@ categories = Category.all
     Task.create(
         description: descriptions.sample,
         user: users.sample,
-        category: categories.sample
+        category: categories.sample,
+        important: false
     )
 end
 
