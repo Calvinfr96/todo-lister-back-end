@@ -12,14 +12,17 @@
 
 ActiveRecord::Schema.define(version: 2021_08_14_133713) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "categories", force: :cascade do |t|
     t.string "name"
   end
 
   create_table "tasks", force: :cascade do |t|
     t.string "description"
-    t.integer "user_id"
-    t.integer "category_id"
+    t.bigint "user_id"
+    t.bigint "category_id"
     t.boolean "important"
     t.boolean "completed"
     t.index ["category_id"], name: "index_tasks_on_category_id"
@@ -30,4 +33,6 @@ ActiveRecord::Schema.define(version: 2021_08_14_133713) do
     t.string "name"
   end
 
+  add_foreign_key "tasks", "categories"
+  add_foreign_key "tasks", "users"
 end
