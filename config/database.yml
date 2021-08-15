@@ -3,6 +3,7 @@ development:
   database: to_do_lister_development
   pool: 5
   timeout: 5000
+  username: calvin
 
 production:
   adapter: postgresql
